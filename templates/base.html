@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}SE-HUB | Enterprise Hub{% endblock %}</title>
+    
+    <!-- SEO & Metadata -->
+    <meta name="description" content="Central inteligente de gestão e entrega de projetos Souza Engenharia.">
+    <meta name="author" content="Souza Engenharia">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    <style>
+        .text-gradient {
+            background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+    {% block head %}{% endblock %}
+</head>
+<body class="min-h-screen flex flex-col">
+    {% if current_user.is_authenticated %}
+    <nav class="glass-nav sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <div class="flex items-center gap-4">
+                    <a href="/" class="flex items-center gap-3 group">
+                        <div class="w-12 h-12 bg-[#2f7ae5] text-white font-bold text-2xl rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">SE</div>
+                        <div class="flex flex-col">
+                            <span class="text-xl font-black tracking-tighter text-main leading-none">CENTRAL DE ENTREGAS</span>
+                            <span class="text-[9px] font-bold text-blue-400 uppercase tracking-[0.2em]">SOUZA ENGENHARIA</span>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="hidden md:flex items-center gap-8">
+                    {% if current_user.role == 'admin' %}
+                    <a href="{{ url_for('admin_dashboard') }}" class="text-xs font-bold uppercase tracking-widest text-slate-400 hover:text-blue-400 transition flex items-center gap-2">
+                        <i class="fas fa-th-large text-[10px]"></i> Dashboard
+                    </a>
+                    <a href="{{ url_for('view_bugs') }}" class="text-xs font-bold uppercase tracking-widest text-slate-400 hover:text-blue-400 transition flex items-center gap-2">
+                        <i class="fas fa-bug text-[10px]"></i> Logs de Erros
+                    </a>
+                    {% endif %}
+                </div>
+
+                <div class="flex items-center gap-6">
+                    {% if current_user.role == 'admin' %}
+                    <div class="hidden sm:flex flex-col items-end">
+                        <span class="text-[10px] font-black text-slate-500 uppercase tracking-widest">ADIMINISTRADOR</span>
+                        <a href="{{ url_for('profile') }}" class="text-sm font-bold text-black hover:text-blue-400 transition">ACESSAR PERFIL</a>
+                    </div>
+                    {% endif %}
+                    {% if current_user.role == 'company' %}
+                    <div class="hidden sm:flex flex-col items-end">
+                        <span class="text-[10px] font-black text-slate-500 uppercase tracking-widest">{{ current_user.company.fantasy_name or current_user.company.name | upper }}</span>
+                        <a href="{{ url_for('profile') }}" class="text-sm font-bold text-black hover:text-blue-400 transition">ACESSAR PERFIL</a>
+                    </div>
+                    {% endif %}
+                    
+                        <a href="{{ url_for('logout') }}" class="w-10 h-10 rounded-full border border-glass-border flex items-center justify-center text-red-500 hover:bg-red-500/10 hover:text-red-600 transition duration-300" title="Sair do Sistema">
+                            <i class="fas fa-power-off"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    {% endif %}
+
+    <main class="flex-grow max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-10">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                <div class="mb-8 p-5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md font-medium text-sm flex items-center gap-4 animate-in fade-in slide-in-from-top-4 duration-500" data-aos="fade-down">
+                    <div class="w-8 h-8 rounded-full flex items-center justify-center {% if category == 'danger' %}bg-red-500/20 text-red-400{% else %}bg-emerald-500/20 text-emerald-400{% endif %}">
+                        <i class="fas {% if category == 'danger' %}fa-circle-exclamation{% else %}fa-circle-check{% endif %}"></i>
+                    </div>
+                    <span class="text-main">{{ message }}</span>
+                    <button onclick="this.parentElement.remove()" class="ml-auto text-muted hover:text-main"><i class="fas fa-times"></i></button>
+                </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Detailed Footer (Enriching the "general pages" info) -->
+    <footer class="mt-auto footer-nav py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <!-- Marca -->
+                <div class="col-span-1 md:col-span-2">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-12 h-12 bg-[#2f7ae5] text-white font-bold text-2xl rounded-2xl flex items-center justify-center">SE</div>
+                        <div class="flex flex-col">
+                            <span class="text-xl font-black tracking-tighter text-main leading-none">CENTRAL DE ENTREGAS</span>
+                            <span class="text-[9px] font-bold text-blue-400 uppercase tracking-[0.2em]">SOUZA ENGENHARIA</span>
+                        </div>
+                    </div>
+                    <p class="text-muted text-sm leading-relaxed max-w-sm text-justify">
+                        Plataforma centralizada para prático acesso e acompanhamento de seus documentos entregáveis. 
+                        A Souza Engenharia compromete-se com a transparência e excelência em cada etapa do seu projeto.
+                    </p>
+                </div>
+
+                <!-- Suporte & Contato -->
+                <div>
+                    <h4 class="text-main font-bold text-xs uppercase tracking-widest mb-6">Suporte & Contato</h4>
+                    <ul class="space-y-4">
+                        <li class="flex items-center gap-3 text-muted text-sm">
+                            <i class="fas fa-envelope text-[#2f7ae5]"></i> leandro@engsouza.com.br
+                        </li>
+                        <li class="flex items-center gap-3 text-muted text-sm">
+                            <i class="fas fa-phone text-[#2f7ae5]"></i> (37) 98828-2788
+                        </li>
+                        <li class="flex items-center gap-3 text-muted text-sm">
+                            <i class="fas fa-clock text-[#2f7ae5]"></i> Seg-Sex: 08h às 18h
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Status do Sistema -->
+                <div>
+                    <h4 class="text-main font-bold text-xs uppercase tracking-widest mb-6">Status do Sistema</h4>
+                    <div class="flex flex-col gap-4">
+                        <div class="flex items-center gap-2">
+                            <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+                            <span class="text-muted text-sm">Servidores Operacionais</span>
+                        </div>
+                        <div class="premium-card bg-white p-3 rounded-xl">
+                            <p class="text-[10px] font-bold text-muted uppercase tracking-widest mb-1">Versão do Sistema</p>
+                            <p class="text-xs font-mono text-blue-400">v1.0.0-beta</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Barra inferior -->
+            <div class="pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-medium text-muted">
+                <p>&copy; 2026  Heytor Cardoso & Souza Engenharia. Todos os direitos reservados.</p>
+                <p class="gap-2 flex justify-center items-center">Desenvolvido por Heytor Cardoso
+                    <a href="https://github.com/HeytorCardoso" target="_blank" class="text-gray-400 hover:text-blue-400 transition text-lg">
+                        <i class="fab fa-github"></i>
+                    </a>
+                </p>
+                <div class="flex gap-8">
+                    <a href="#" class="hover:text-blue-400 transition">Privacidade</a>
+                    <a href="#" class="hover:text-blue-400 transition">Termos de Uso</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal de Confirmação Global -->
+    <div id="modalConfirmAction" class="fixed inset-0 z-[200] hidden flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-slate-900/80 backdrop-blur-sm" onclick="closeConfirmModal()"></div>
+        <div class="confirm-dialog bg-white w-full max-w-sm rounded-[2.5rem] shadow-2xl border border-slate-200 overflow-hidden relative z-10">
+            <div class="p-10 space-y-6 text-center">
+                <div id="confirm_icon_wrap" class="w-20 h-20 rounded-[2rem] flex items-center justify-center text-3xl mx-auto shadow-2xl bg-red-100 text-red-600 border border-red-200">
+                    <i id="confirm_icon" class="fas fa-trash-alt"></i>
+                </div>
+                <div>
+                    <h3 id="confirm_title" class="text-xl font-black text-main uppercase tracking-tighter mb-2">Confirmar Exclusão</h3>
+                    <p id="confirm_message" class="text-xs font-bold text-muted leading-relaxed">Esta ação não pode ser desfeita.</p>
+                </div>
+                <div class="flex flex-col gap-3 pt-2">
+                    <a id="confirm_btn" href="#" class="w-full bg-red-600 hover:bg-red-700 text-white py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] transition active:scale-95 shadow-lg shadow-red-500/20">
+                        <span id="confirm_btn_label">Sim, Excluir</span>
+                    </a>
+                    <button type="button" onclick="closeConfirmModal()" class="text-[10px] font-black text-muted hover:text-main uppercase tracking-[0.2em] transition py-2">
+                        Cancelar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Alerta / Aviso -->
+    <div id="modalAlert" class="fixed inset-0 z-[200] hidden flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-slate-900/80 backdrop-blur-sm" onclick="closeAlertModal()"></div>
+        <div class="alert-dialog bg-white w-full max-w-sm rounded-[2.5rem] shadow-2xl border border-slate-200 overflow-hidden relative z-10">
+            <div class="p-10 space-y-6 text-center">
+                <div id="alert_icon_wrap" class="w-20 h-20 rounded-[2rem] flex items-center justify-center text-3xl mx-auto shadow-2xl bg-blue-100 text-blue-600 border border-blue-200">
+                    <i id="alert_icon" class="fas fa-info-circle"></i>
+                </div>
+                <div>
+                    <h3 id="alert_title" class="text-xl font-black text-main uppercase tracking-tighter mb-2">Aviso</h3>
+                    <p id="alert_message" class="text-xs font-bold text-muted leading-relaxed"></p>
+                </div>
+                <button type="button" id="alert_btn" onclick="closeAlertModal()"
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] transition active:scale-95 shadow-lg shadow-blue-500/20">
+                    Entendi
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="{{ url_for('static', filename='js/ui.js') }}"></script>
+    <script>
+        AOS.init({ 
+            duration: 1000, 
+            once: true,
+            easing: 'ease-out-cubic'
+        });
+    </script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

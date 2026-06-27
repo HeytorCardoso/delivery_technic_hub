@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% block title %}SE-HUB | Configurações de Perfil{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto" data-aos="fade-up">
+    <header class="mb-12 text-center">
+        <div class="inline-flex items-center justify-center w-28 h-28 bg-gradient-to-br from-blue-600 to-indigo-700 text-white rounded-[2.5rem] text-4xl font-black shadow-2xl mb-6 relative overflow-hidden group border-4 border-slate-200">
+            {% if current_user.role == 'company' and current_user.company.logo_url %}
+                <img src="{{ current_user.company.logo_url }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+            {% else %}
+                {{ current_user.username[0] | upper }}
+            {% endif %}
+            <div class="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors"></div>
+        </div>
+        <h1 class="text-4xl font-black text-black tracking-tight">CONFIGURAÇÕES DE PERFIL</h1>
+        <p class="text-muted font-medium text-sm mt-2 uppercase tracking-widest">Painel de informações de identidade e segurança</p>
+    </header>
+
+    <div class="premium-card overflow-hidden">
+        <form action="{{ url_for('update_profile') }}" method="POST" class="p-8 md:p-12 space-y-10" data-validate-password data-require-current="true">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <!-- User Info -->
+                <div class="space-y-8">
+                    <h3 class="text-[10px] font-black text-blue-400 uppercase tracking-[0.3em] flex items-center gap-2">
+                        <i class="fas fa-lock-open text-[8px]"></i> Credenciais de Acesso
+                    </h3>
+                    
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black text-muted uppercase tracking-widest ml-2">Usuário de Login</label>
+                        <div class="relative">
+                            <i class="fas fa-at absolute left-4 top-1/2 -translate-y-1/2 text-muted text-xs"></i>
+                            <input type="text" name="username" value="{{ current_user.username }}" class="w-full pl-10 p-4 input-glass rounded-2xl outline-none font-bold" required>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black text-muted uppercase tracking-widest ml-2">Senha Atual</label>
+                        <div class="relative password-field">
+                            <i class="fas fa-shield-alt absolute left-4 top-1/2 -translate-y-1/2 text-muted text-xs z-10"></i>
+                            <input type="password" name="current_password" placeholder="••••••••" class="w-full pl-10 p-4 input-glass rounded-2xl outline-none font-bold">
+                            <button type="button" onclick="togglePasswordVisibility(this)" class="password-toggle-btn" tabindex="-1"><i class="fas fa-eye"></i></button>
+                        </div>
+                        <p class="text-[9px] text-muted font-bold mt-2 ml-2">Obrigatória apenas ao alterar a senha.</p>
+                    </div>
+                    
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black text-muted uppercase tracking-widest ml-2">Nova Senha de Acesso</label>
+                        <div class="relative password-field">
+                            <i class="fas fa-key absolute left-4 top-1/2 -translate-y-1/2 text-muted text-xs z-10"></i>
+                            <input type="password" name="password" placeholder="••••••••" class="w-full pl-10 p-4 input-glass rounded-2xl outline-none font-bold">
+                            <button type="button" onclick="togglePasswordVisibility(this)" class="password-toggle-btn" tabindex="-1"><i class="fas fa-eye"></i></button>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black text-muted uppercase tracking-widest ml-2">Confirmar Nova Senha</label>
+                        <div class="relative password-field">
+                            <i class="fas fa-key absolute left-4 top-1/2 -translate-y-1/2 text-muted text-xs z-10"></i>
+                            <input type="password" name="password_confirm" placeholder="••••••••" class="w-full pl-10 p-4 input-glass rounded-2xl outline-none font-bold">
+                            <button type="button" onclick="togglePasswordVisibility(this)" class="password-toggle-btn" tabindex="-1"><i class="fas fa-eye"></i></button>
+                        </div>
+                        <p class="text-[9px] text-muted font-bold mt-2 ml-2">Preencha apenas se desejar alterar a senha atual.</p>
+                    </div>
+                </div>
+
+                <!-- Company Info (Only if role is company) -->
+                {% if current_user.role == 'company' %}
+                <div class="space-y-8">
+                    <h3 class="text-[10px] font-black text-blue-400 uppercase tracking-[0.3em] flex items-center gap-2">
+                        <i class="fas fa-building text-[8px]"></i> Dados Corporativos
+                    </h3>
+                    
+                    <div class="grid grid-cols-1 gap-5">
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-black text-muted uppercase tracking-widest ml-2">Nome Fantasia</label>
+                            <input type="text" name="fantasy_name" value="{{ current_user.company.fantasy_name or '' }}" placeholder="Ex: Engenharia Souza" class="w-full p-4 input-glass rounded-2xl outline-none font-bold">
+                        </div>
+                        
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-black text-muted uppercase tracking-widest ml-2">Email de Contato</label>
+                            <input type="email" name="contact_email" value="{{ current_user.company.contact_email or '' }}" class="w-full p-4 input-glass rounded-2xl outline-none font-bold">
+                        </div>
+                        
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-black text-muted uppercase tracking-widest ml-2">Telefone Direto</label>
+                            <input type="text" name="contact_phone" value="{{ current_user.company.contact_phone or '' }}" class="w-full p-4 input-glass rounded-2xl outline-none font-bold">
+                        </div>
+                        
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-black text-muted uppercase tracking-widest ml-2">URL da Logomarca</label>
+                            <input type="url" name="logo_url" value="{{ current_user.company.logo_url or '' }}" placeholder="https://link-da-imagem.png" class="w-full p-4 input-glass rounded-2xl outline-none font-bold text-xs">
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="pt-10 border-t border-slate-200 flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="flex items-center gap-3 text-muted">
+                    <i class="fas fa-info-circle"></i>
+                    <p class="text-[10px] font-bold uppercase tracking-widest">Alterações requerem nova validação do sistema.</p>
+                </div>
+                <button type="submit" class="w-full md:w-auto btn-premium px-12 py-5 rounded-[1.5rem] text-[11px] font-black uppercase tracking-[0.2em] shadow-2xl active:scale-95 transition-all">
+                    Salvar Alterações
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

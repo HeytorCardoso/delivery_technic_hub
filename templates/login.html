@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SE-HUB | Login Seguro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; overflow: hidden; }
+        h1, h2, h3, .font-heading { font-family: 'Outfit', sans-serif; }
+
+        .input-glass {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .input-glass:focus {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: #3b82f6;
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-6">
+
+    <div class="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative z-10">
+        
+        <!-- Left: Branding & Info (Enriching the page) -->
+        <div class="hidden lg:block space-y-8" data-aos="fade-right">
+            <div class="flex items-center gap-4">
+                <div class="w-14 h-14 bg-blue-600 rounded-2xl flex items-center justify-center text-white font-bold text-2xl shadow-2xl shadow-blue-600/40">SE</div>
+                <div>
+                    <h1 class="text-2xl font-black text-main tracking-widest leading-none">CENTRAL DE ENTREGAS</h1>
+                    <p class="text-blue-400 font-bold text-xs uppercase tracking-[0.3em]">SOUZA ENGENHARIA</p>
+                </div>
+            </div>
+
+            <div class="space-y-6 max-w-md">
+                <h2 class="text-5xl font-black text-main leading-tight">Excelência técnica em cada entrega.</h2>
+                <p class="text-muted text-lg">Acesse sua central exclusiva para visualizar os endereços para os seus documentos entregáveis com total segurança.</p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-6 pt-6">
+                <div class="premium-card p-5">
+                    <i class="fas fa-shield-halved text-blue-500 mb-3 text-xl"></i>
+                    <h4 class="text-main font-bold text-sm mb-1">Criptografia Ponta-a-Ponta</h4>
+                    <p class="text-muted text-xs text-balance">Seus dados protegidos pelos mais altos padrões de segurança.</p>
+                </div>
+                <div class="premium-card p-5">
+                    <i class="text-blue-500 fas fa-bolt text-gold mb-3 text-xl"></i>
+                    <h4 class="text-main font-bold text-sm mb-1">Acesso em Tempo Real</h4>
+                    <p class="text-muted text-xs text-balance">Tenha acesso aos seus documentos onde e quando quiser.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: Login Form -->
+        <div class="flex justify-center lg:justify-end" data-aos="zoom-in" data-aos-delay="200">
+            <div class="w-full max-w-md premium-card p-8 md:p-12 shadow-2xl relative overflow-hidden group">
+                <!-- Inner Glow -->
+                <div class="absolute -top-24 -right-24 w-48 h-48 bg-blue-500/10 rounded-full blur-3xl transition-all duration-700 group-hover:bg-blue-500/20"></div>
+
+                <div class="text-center lg:text-left mb-10">
+                    <div class="lg:hidden w-16 h-16 bg-blue-600 font-bold text-white rounded-2xl flex items-center justify-center text-3xl mx-auto mb-6 shadow-xl shadow-blue-600/30">SE</div>
+                    <h3 class="text-2xl font-black text-main mb-2 text-center">Bem-vindo de volta</h3>
+                    <p class="text-muted text-sm font-medium text-center">Por favor, insira suas credenciais</p>
+                </div>
+
+                <form action="/login" method="POST" class="space-y-6">
+                    <div class="space-y-2">
+                        <label class="block text-[10px] font-black text-muted uppercase tracking-widest ml-1">Identificação / Email</label>
+                        <div class="relative">
+                            <i class="fas fa-user absolute left-4 top-1/2 -translate-y-1/2 text-muted text-sm"></i>
+                            <input type="text" name="username" placeholder="Seu nome de usuário" class="text-black bg-white w-full pl-12 pr-4 py-4 input-glass rounded-2xl outline-none text-sm font-semibold" required>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center mb-1">
+                            <label class="block text-[10px] font-black text-muted uppercase tracking-widest ml-1">Senha</label>
+                            <button type="button" onclick="document.getElementById('modalForgotPassword').classList.remove('hidden')" class="text-[10px] font-bold text-blue-500 hover:text-blue-400 transition uppercase tracking-widest">Esqueceu?</button>
+                        </div>
+                        <div class="relative password-field">
+                            <i class="fas fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-muted text-sm z-10"></i>
+                            <input type="password" name="password" placeholder="••••••••" class="text-black bg-white w-full pl-12 pr-12 py-4 input-glass rounded-2xl outline-none text-sm font-semibold" required>
+                            <button type="button" onclick="togglePasswordVisibility(this)" class="password-toggle-btn" tabindex="-1"><i class="fas fa-eye"></i></button>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full btn-premium py-4 rounded-2xl font-black uppercase tracking-[0.2em] text-sm mt-4 active:scale-95 transition-transform">
+                        Entrar na Central
+                    </button>
+                    
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                            <div class="flex items-center gap-2 justify-center text-red-500 text-xs font-bold mt-4 animate-shake">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                {{ message }}
+                            </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+                </form>
+
+                <div class="mt-10 pt-8 border-t border-slate-200 text-center">
+                    <p class="text-muted text-xs font-medium">Restrito a colaboradores e clientes autorizados.<br><br>
+                    <p class="text-muted text-xs font-medium gap-2 flex justify-center items-center">Desenvolvido por Heytor Cardoso
+                        <a href="https://github.com/HeytorCardoso" target="_blank" class="text-gray-400 hover:text-blue-400 transition text-lg">
+                            <i class="fab fa-github"></i>
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Esqueceu a Senha -->
+    <div id="modalForgotPassword" class="fixed inset-0 z-[200] hidden flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-slate-900/80 backdrop-blur-sm" onclick="document.getElementById('modalForgotPassword').classList.add('hidden')"></div>
+        <div class="confirm-dialog confirm-dialog-visible bg-white w-full max-w-sm rounded-[2.5rem] shadow-2xl border border-slate-200 overflow-hidden relative z-10">
+            <div class="p-10 space-y-6 text-center">
+                <div class="w-20 h-20 rounded-[2rem] flex items-center justify-center text-3xl mx-auto shadow-2xl bg-blue-100 text-blue-600 border border-blue-200">
+                    <i class="fas fa-user-lock"></i>
+                </div>
+                <div>
+                    <h3 class="text-xl font-black text-slate-900 uppercase tracking-tighter mb-2">Redefinição de Senha</h3>
+                    <p class="text-xs font-bold text-slate-500 leading-relaxed">
+                        Por motivos de segurança, a redefinição de senha deve ser solicitada diretamente ao administrador do sistema.
+                        Entre em contato com a Souza Engenharia para receber novas credenciais de acesso.
+                    </p>
+                </div>
+                <button type="button" onclick="document.getElementById('modalForgotPassword').classList.add('hidden')"
+                    class="w-full btn-premium py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] transition active:scale-95">
+                    Entendi
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Alerta / Aviso -->
+    <div id="modalAlert" class="fixed inset-0 z-[200] hidden flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-slate-900/80 backdrop-blur-sm" onclick="closeAlertModal()"></div>
+        <div class="alert-dialog bg-white w-full max-w-sm rounded-[2.5rem] shadow-2xl border border-slate-200 overflow-hidden relative z-10">
+            <div class="p-10 space-y-6 text-center">
+                <div id="alert_icon_wrap" class="w-20 h-20 rounded-[2rem] flex items-center justify-center text-3xl mx-auto shadow-2xl bg-blue-100 text-blue-600 border border-blue-200">
+                    <i id="alert_icon" class="fas fa-info-circle"></i>
+                </div>
+                <div>
+                    <h3 id="alert_title" class="text-xl font-black text-slate-900 uppercase tracking-tighter mb-2">Aviso</h3>
+                    <p id="alert_message" class="text-xs font-bold text-slate-500 leading-relaxed"></p>
+                </div>
+                <button type="button" id="alert_btn" onclick="closeAlertModal()"
+                    class="w-full btn-premium py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] transition active:scale-95">
+                    Entendi
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="{{ url_for('static', filename='js/ui.js') }}"></script>
+    <script>
+        AOS.init({ 
+            duration: 1000, 
+            once: true,
+            easing: 'ease-out-back'
+        });
+    </script>
+</body>
+</html>
