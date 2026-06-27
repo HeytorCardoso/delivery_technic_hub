@@ -17,10 +17,6 @@ Plataforma premium para gerenciamento de entregas e links para empresas clientes
    ```bash
    python app.py
    ```
-3. Acesse o painel admin:
-   - **Login:** admin
-   - **Senha:** admin123
-   *(Recomenda-se trocar a senha após o primeiro acesso)*
 
 ## Funcionalidades
 - **Admin:**
